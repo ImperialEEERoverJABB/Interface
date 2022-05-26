@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 const DisplayWrapper = styled.div`
-  background-color: lightgrey;
   margin: 0;
 `;
 
@@ -51,7 +50,7 @@ export const MissionClockDisplay = ({
 }) => {
   const [mission, setClock] = useState(getNewMissionTimeState(start));
   
-  setInterval(() => { setClock(getNewMissionTimeState(start)) }, 100);
+  setInterval(() => { setClock(getNewMissionTimeState(start)) }, 1000);
 
   return (
     <DisplayWrapper>

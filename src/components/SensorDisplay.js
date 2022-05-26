@@ -14,23 +14,22 @@ const LeftWrapper = styled.div`
 const NameWrapper = styled.div`
   height: 40%;
   width: 100%;
-  background-color: lightgrey;
   margin: 0;
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding-left: 1.5px;
 `;
 
 const Name = styled.span`
   color: white;
-  font-weight: bold;
+  // font-weight: bold;
   opacity: 80%;
 `;
 
 const ValueWrapper = styled.div`
   height: 60%;
   width: 100%;
-  background-color: lightgrey;
   margin: 0;
   display: flex;
   flex-direction: row;
@@ -45,12 +44,10 @@ const Value = styled.span`
 
 const RightWrapper = styled.div`
   flex: 1;
-  background-color: lightgrey;
 `;
 
 const StatusWrapper = styled.div`
   margin: 0;
-  background-color: lightgrey;
   border-radius: 50%;
   width: 100%;
   height: 100%;
@@ -75,7 +72,6 @@ const StatusWrapper = styled.div`
 
 const BrokenStatusWrapper = styled.div`
   margin: 0;
-  background-color: lightgrey;
   border-radius: 50%;
   width: 100%;
   height: 100%;

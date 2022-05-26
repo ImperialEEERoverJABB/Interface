@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 
 const DisplayWrapper = styled.div`
-  background-color: lightgrey;
   margin: 0;
   color: white;
 `;

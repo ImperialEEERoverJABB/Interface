@@ -1,10 +1,8 @@
 import styled from 'styled-components';
 
 const DisplayWrapper = styled.div`
-  width: 250px;
   height: 40px;
 
-  background-color: lightgrey;
   display: flex;
   flex-direction: row;
 `;
