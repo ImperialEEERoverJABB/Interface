@@ -95,6 +95,19 @@ const BrokenStatusWrapper = styled.div`
   border: solid 8px rgba(255, 0, 0, 0.6);
 `;
 
+const StaticStatusWrapper = styled.div`
+  margin: 0;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  box-sizing: border-box;
+  border: solid 8px rgba(255, 255, 255, 0.6);
+`;
+
 const UnitWrapper = styled.div`
   margin: 0;
   width: 90%;
@@ -139,8 +152,23 @@ const Unit = styled.span`
 export const SensorDisplay = ({
   name,
   value,
-  unit
+  unit,
+  measure
 }) => {
+  const UnitModule = (value, measure) => {
+    if (value) {
+      if (measure) {
+        return (<StatusWrapper><UnitWrapper><Unit>{unit}</Unit></UnitWrapper></StatusWrapper>);
+      }
+      else {
+        return (<StaticStatusWrapper><BrokenUnitWrapper><Unit>{unit}</Unit></BrokenUnitWrapper></StaticStatusWrapper>);
+      }
+    }
+    else {
+      return (<BrokenStatusWrapper><BrokenUnitWrapper><Unit>{unit}</Unit></BrokenUnitWrapper></BrokenStatusWrapper>);
+    }
+  }
+
   return (
     <DisplayWrapper>
       <LeftWrapper>
@@ -148,10 +176,7 @@ export const SensorDisplay = ({
         <ValueWrapper><Value>{value ? value : "NULL"}</Value></ValueWrapper>
       </LeftWrapper>
       <RightWrapper>
-        {value ? 
-          <StatusWrapper><UnitWrapper><Unit>{unit}</Unit></UnitWrapper></StatusWrapper> : 
-          <BrokenStatusWrapper><BrokenUnitWrapper><Unit>{unit}</Unit></BrokenUnitWrapper></BrokenStatusWrapper>
-        }
+        {UnitModule(value, measure)}
       </RightWrapper>
     </DisplayWrapper>
   );
