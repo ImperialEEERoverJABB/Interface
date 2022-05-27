@@ -4,7 +4,7 @@
 
 User interface for Imperial College EEERover (modeled after the Martian's RoverCam). See below for mockup.
 
-![Rover Interface Mockup](./docs/img/Rover%20Mockup%20-%20Static.png)
+![Rover Interface Mockup](./docs/img/Rover%20Mockup%20-%20Static%20Low%20Res.jpg)
 
 ## Quick Start
 
