@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled from 'styled-components';
 
 
@@ -26,6 +27,24 @@ const StatusDisplay = styled.p`
   font-weight: bold;
 `;
 
+const nextConnectingState = (last) => {
+  let now = new Date();
+  if ((now - last) < 1000) {
+    return last;
+  }
+  else {
+    console.log(now, last);
+    let display = document.getElementById('connection');
+    if (display.innerText !== 'ESTABLISHING CONNECTION...') {
+      display.innerText += '.';
+    }
+    else {
+      display.innerText = 'ESTABLISHING CONNECTION';
+    }
+    return new Date(); 
+  }
+}
+
 
 export const ConnectionDisplay = ({
   device,
@@ -35,7 +54,12 @@ export const ConnectionDisplay = ({
   time,
   address
 }) => {
-  
+  useEffect(() => {
+    var last = new Date();
+    setInterval(() => {
+      last = nextConnectingState(last);
+    }, 1000);
+  }, [connected])
 
   return (
     <DisplayWrapper>
@@ -45,7 +69,7 @@ export const ConnectionDisplay = ({
       </CameraDisplay>
       { connected ?
         <StatusDisplay>CONNECTED-{address}-{method}-{(time.toTimeString()).toUpperCase()} </StatusDisplay> :
-        <StatusDisplay>ESTABLISHING CONNECTION...</StatusDisplay>
+        <StatusDisplay id="connection">ESTABLISHING CONNECTION</StatusDisplay>
       }
     </DisplayWrapper>
   );
