@@ -6,7 +6,7 @@ const DisplayWrapper = styled.div`
 `;
 
 const Label = styled.p`
-  width: 190px;
+  width: 189px;
   margin: 0;
   margin-bottom: 8px;
   color: white;
@@ -15,17 +15,19 @@ const Label = styled.p`
 `;
 
 const MissionTimeWrapper = styled.div`
-  width: 190px;
+  display: inline-block;
+  padding-left: 8px;
+  padding-right: 8px;
   background-color: white;
   mix-blend-mode: screen;
   text-align: left;
 `;
 
 const MissionTimeDisplay = styled.span`
+  font-family: 'Roboto Mono';
   color: black;
   font-weight: bold;
-  font-size: 2.5em;
-  padding-left: 8px;
+  font-size: 2.25em;
 `;
 
 
@@ -36,6 +38,7 @@ const toTwoDigits = (num) => {
 };
 
 const getNewMissionTimeState = (start) => {
+  if (!start) return start;
   let now = new Date();
   let diff = now - start;
   let hour = Math.floor(diff / (3600*1000));
@@ -56,7 +59,10 @@ export const MissionClockDisplay = ({
     <DisplayWrapper>
       <Label><span>MISSION</span><span>ELAPSED</span><span>TIME</span></Label>
       <MissionTimeWrapper>
-        <MissionTimeDisplay>{mission}</MissionTimeDisplay>
+        { mission ? 
+          <MissionTimeDisplay>{mission}</MissionTimeDisplay> :
+          <MissionTimeDisplay>00:00:00</MissionTimeDisplay>
+        }
       </MissionTimeWrapper>
     </DisplayWrapper>
   );
