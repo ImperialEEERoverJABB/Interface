@@ -33,7 +33,6 @@ const nextConnectingState = (last) => {
     return last;
   }
   else {
-    console.log(now, last);
     let display = document.getElementById('connection');
     if (display.innerText !== 'ESTABLISHING CONNECTION...') {
       display.innerText += '.';
