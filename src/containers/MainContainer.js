@@ -14,6 +14,8 @@ import DummyImage from "../img/dummy-img-mars.png";
 
 import { drive, reverse, left, right, end, sensors } from "../apis/HttpComms.api";
 
+var InternetFlag = false;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -85,6 +87,7 @@ export const MainContainer = () => {
   // display states
   const [connection, setConnection] = useState(null);
   const [start, setStart] = useState(null);
+  const [stable, setStable] = useState(undefined);
   const [data, setData] = useState({});
   // function states
   const [intervalId, setIntervalId] = useState(null);
@@ -102,17 +105,23 @@ export const MainContainer = () => {
         let parsed = await sensors();
 
         // if connection successful and connection not set
-        if (!connection) {
+        if (connection === null) {
+          console.log(connection);
           // set connection state
           setConnection(true);
           // set start time
           let systemStart = new Date((new Date()).getTime() - parsed.time);
           setStart(systemStart);
+          if (!InternetFlag) {
+            InternetFlag = true;
+            setStable(new Date());
+          }
         }
 
         setData(parsed);
       }
       catch (e) {
+        InternetFlag = false;
         setConnection(false);
         setIntervalId(null);
         clearInterval(sensorIntervalId);
@@ -202,7 +211,7 @@ export const MainContainer = () => {
             <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="G" max={1} measure={true}/></SensorDisplayWrapper>
             <Label>ENVIRONMENT</Label>
           </SensorModule>
-          <ConnectionDisplay connected={connection} device="EEEROVER" address="192.168.0.17" method="HTTP" time={start}/>
+          <ConnectionDisplay connected={connection} device="EEEROVER" address="192.168.0.17" method="HTTP" time={stable}/>
         </Left>
         <Right>
           <ClockDisplay />
