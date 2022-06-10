@@ -34,6 +34,9 @@ const nextConnectingState = (last) => {
   }
   else {
     let display = document.getElementById('connection');
+    if (!display) {
+      throw new Error("connection state changed");
+    }
     if (display.innerText !== 'ESTABLISHING CONNECTION...') {
       display.innerText += '.';
     }
@@ -55,8 +58,13 @@ export const ConnectionDisplay = ({
 }) => {
   useEffect(() => {
     var last = new Date();
-    setInterval(() => {
-      last = nextConnectingState(last);
+    var connectionInterval = setInterval(() => {
+      try {
+        last = nextConnectingState(last);
+      }
+      catch (e) {
+        clearInterval(connectionInterval);
+      }
     }, 1000);
   }, [connected])
 
