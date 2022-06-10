@@ -196,10 +196,10 @@ export const MainContainer = () => {
         <Left>
           <MissionClockDisplay start={start}/>
           <SensorModule>
-            <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="DB"/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="RADIO SIG" value={data.radio} unit="HZ"/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="INFRARED SIG" value={data.infrared} unit="HZ"/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="G"/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="DB" max={1} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="RADIO SIG" value={data.radio} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="INFRARED SIG" value={data.infrared} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="G" max={1} measure={true}/></SensorDisplayWrapper>
             <Label>ENVIRONMENT</Label>
           </SensorModule>
           <ConnectionDisplay connected={connection} device="EEEROVER" address="192.168.0.17" method="HTTP" time={start}/>
@@ -207,7 +207,7 @@ export const MainContainer = () => {
         <Right>
           <ClockDisplay />
           <RoverModule>
-            <SensorDisplayWrapper><SensorDisplay name="OUTPUT VOL" value="10.09" unit="V"/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="OUTPUT VOL" value="10.09" max={12} unit="V" measure={true}/></SensorDisplayWrapper>
             {/* <SensorDisplayWrapper><SensorDisplay name="BATTERY" value="12.34" unit="%"/></SensorDisplayWrapper> */}
             <SensorDisplayWrapper><SensorDisplay name="MODE" value={data.mode} unit={(data.mode ? data.mode[0] : "N")}/></SensorDisplayWrapper>
             <Label>ROVER STATUS</Label>
