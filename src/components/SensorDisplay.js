@@ -56,8 +56,8 @@ const StatusWrapper = styled.div`
   align-items: center;
 
   box-sizing: border-box;
-  border: solid 8px white;
-  border-right-color: rgba(255, 255, 255, 0.6);
+  border: solid 8px rgba(255, 255, 255, 0.6);
+  border-right-color: white;
 	/* border-bottom-color: rgba(255, 255, 255, 0.6); */
   @keyframes rotate {
     from { transform: rotate(0deg); }
