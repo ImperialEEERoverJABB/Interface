@@ -72,7 +72,7 @@ const displayTime = (dataAry, dataObj) => {
 }
 
 // return state
-function drive() {
+function forward() {
     try { instance.get('/forward'); }
     catch (e) { throw new Error("axios cannot connect to target address"); }
 }
@@ -82,13 +82,33 @@ function reverse() {
     catch (e) { throw new Error("axios cannot connect to target address"); }
 }
 
-function left() {
-    try { instance.get('/left-turn'); }
+function rotateLeft() {
+    try { instance.get('/rotate-left'); }
     catch (e) { throw new Error("axios cannot connect to target address"); }
 }
 
-function right() {
-    try { instance.get('/right-turn'); }
+function rotateRight() {
+    try { instance.get('/rotate-right'); }
+    catch (e) { throw new Error("axios cannot connect to target address"); }
+}
+
+function forwardLeft() {
+    try { instance.get('/forward-left'); }
+    catch (e) { throw new Error("axios cannot connect to target address"); }
+}
+
+function forwardRight() {
+    try { instance.get('/forward-right'); }
+    catch (e) { throw new Error("axios cannot connect to target address"); }
+}
+
+function reverseLeft() {
+    try { instance.get('/reverse-left'); }
+    catch (e) { throw new Error("axios cannot connect to target address"); }
+}
+
+function reverseRight() {
+    try { instance.get('/reverse-right'); }
     catch (e) { throw new Error("axios cannot connect to target address"); }
 }
 
@@ -128,10 +148,14 @@ async function sensors() {
 
 // exports
 module.exports = {
-    drive,
+    forward,
     reverse,
-    left,
-    right,
-    end,
-    sensors
+    sensors,
+    rotateLeft,
+    rotateRight,
+    forwardLeft,
+    forwardRight,
+    reverseLeft,
+    reverseRight,
+    end
 }

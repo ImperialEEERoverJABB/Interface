@@ -12,7 +12,7 @@ import { RockModal } from "../components/RockModal";
 
 import DummyImage from "../img/dummy-img-mars.png";
 
-import { drive, reverse, left, right, end, sensors } from "../apis/HttpComms.api";
+import { forward, reverse, end, sensors, forwardLeft, forwardRight, reverseLeft, reverseRight, rotateLeft, rotateRight } from "../apis/HttpComms.api";
 
 var InternetFlag = false;
 
@@ -152,30 +152,81 @@ export const MainContainer = () => {
   let s = useKeyPress("s");
   let d = useKeyPress("d");
   let j = useKeyPress("j");
+  // util function
+  const keyPressedString = (w, a, s, d, j=false) => {
+    let array = [];
+    if (w) array.push("W");
+    if (a) array.push("A");
+    if (s) array.push("S");
+    if (d) array.push("D");
+    if (j) array.push("J");
+    if (array.length === 0) return "";
+    else if (array.length === 1) return array[0];
+    else if (array.length === 2) return array[0] + " and " + array[1];
+    else {
+      let ans = "";
+      for (let item of array) {
+        if (item === array[array.length-1]) {
+          ans += item;
+        }
+        else if (item === array[array.length-2]) {
+          ans += (item + ", and ");
+        }
+        else {
+          ans += (item + ", ")
+        }
+      }
+      return ans;
+    }
+  }
   // command hook
   useEffect(() => {
-    if ((w + a + s + d) > 1) {
-      console.log("nothing");
+    let num = w + a + s +d;
+    if (num === 2) {
+      if (w && a) {
+        console.log("forwardLeft()");
+        forwardLeft();
+      }
+      else if (w && d) {
+        console.log("forwardRight()");
+        forwardRight();
+      }
+      else if (s && a) {
+        console.log("reverseLeft()");
+        reverseLeft();
+      }
+      else if (s && d) {
+        console.log("reverseRight()");
+        reverseRight();
+      }
+      else {
+        console.log("Invalid Key Combination: " + keyPressedString(w, a, s, d));
+      }
     }
-    else if (w) {
-      drive();
-      console.log("drive()");
+    else if (num === 1) {
+      if (w) {
+        console.log("forward()");
+        forward();
+      }
+      else if (a) {
+        console.log("rotateLeft()");
+        rotateLeft();
+      }
+      else if (s) {
+        console.log("reverse()");
+        reverse();
+      }
+      else if (d) {
+        console.log("rotateRight()");
+        rotateRight();
+      }
     }
-    else if (a) {
-      left();
-      console.log("left()");
-    }
-    else if (s) {
-      reverse();
-      console.log("reverse()");
-    }
-    else if (d) {
-      right();
-      console.log("right()");
+    else if (num === 0) {
+      console.log("end()");
+      end();
     }
     else {
-      end();
-      console.log("end()");
+      console.log("Invalid Key Combination: " + keyPressedString(w, a, s, d));
     }
   }, 
   // eslint-disable-next-line react-hooks/exhaustive-deps
