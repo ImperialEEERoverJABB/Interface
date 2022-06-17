@@ -308,7 +308,7 @@ export const MainContainer = () => {
             <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="PA" max={1} measure={true}/></SensorDisplayWrapper>
             <SensorDisplayWrapper><SensorDisplay name="RADIO SIG" value={data.radio} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
             <SensorDisplayWrapper><SensorDisplay name="INFRARED SIG" value={data.infrared} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="MT" max={1} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="UT" max={1} measure={true}/></SensorDisplayWrapper>
             <Label>ENVIRONMENT</Label>
           </SensorModule>
           <ConnectionDisplay connected={connection} device="EEEROVER" address="192.168.0.17" method="HTTP" time={stable}/>
