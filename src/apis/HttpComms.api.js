@@ -8,7 +8,17 @@ var instance = axios.create({
 
 
 // util functions
-const MODE_MAP = { "000": "DRV", "001": "REV", "010": "LFT", "011": "RGT", "100": "PRK" };
+const prettyMode = { 
+    "FORWARD": ["DRV", "D"], 
+    "REVERSE": ["REV", "R"], 
+    "ROTATE LEFT": ["LFT", "L"], 
+    "ROTATE RIGHT": ["RGT", "R"], 
+    "FORWARD LEFT": ["DWL", "DL"],
+    "FORWARD RIGHT": ["DWR", "DR"],
+    "REVERSE LEFT": ["RVL", "RL"],
+    "REVERSE RIGHT": ["RVR", "RR"],
+    "PARK": ["PRK", "P"] 
+};
 const prettyNum = (numstr) => {
     if (!numstr) return numstr;
     if (numstr.length < 5) return numstr;
@@ -73,49 +83,67 @@ const displayTime = (dataAry, dataObj) => {
 }
 
 // return state
-function forward() {
-    try { instance.get('/forward'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function forward() {
+    let start = performance.now();
+    let response = await instance.get('/forward');
+    let finish = performance.now();
+    return { duration: String(((finish-start).toFixed(5))).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] };
 }
 
-function reverse() {
-    try { instance.get('/reverse'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function reverse() {
+    let start = performance.now();
+    let response = await instance.get('/reverse');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] };    
 }
 
-function rotateLeft() {
-    try { instance.get('/rotate-left'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function rotateLeft() {
+    let start = performance.now();
+    let response = await instance.get('/rotate-left');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
-function rotateRight() {
-    try { instance.get('/rotate-right'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function rotateRight() {
+    let start = performance.now();
+    let response = await instance.get('/rotate-right');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
-function forwardLeft() {
-    try { instance.get('/forward-left'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function forwardLeft() {
+    let start = performance.now();
+    let response = await instance.get('/forward-left');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
-function forwardRight() {
-    try { instance.get('/forward-right'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function forwardRight() {
+    let start = performance.now();
+    let response = await instance.get('/forward-right');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
-function reverseLeft() {
-    try { instance.get('/reverse-left'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function reverseLeft() {
+    let start = performance.now();
+    let response = await instance.get('/reverse-left');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
-function reverseRight() {
-    try { instance.get('/reverse-right'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function reverseRight() {
+    let start = performance.now();
+    let response = await instance.get('/reverse-right');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
-function end() {
-    try { instance.get('/end'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function end() {
+    let start = performance.now();
+    let response = await instance.get('/end');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
 // return data dump

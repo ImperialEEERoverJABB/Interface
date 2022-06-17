@@ -185,19 +185,19 @@ export const MainContainer = () => {
     if (num === 2) {
       if (w && a) {
         console.log("forwardLeft()");
-        forwardLeft();
+        (async function() { setCommand(await forwardLeft()); }());
       }
       else if (w && d) {
         console.log("forwardRight()");
-        forwardRight();
+        (async function() { setCommand(await forwardRight()); }());
       }
       else if (s && a) {
         console.log("reverseLeft()");
-        reverseLeft();
+        (async function() { setCommand(await reverseLeft()); }());
       }
       else if (s && d) {
         console.log("reverseRight()");
-        reverseRight();
+        (async function() { setCommand(await reverseRight()); }());
       }
       else {
         console.log("Invalid Key Combination: " + keyPressedString(w, a, s, d));
@@ -206,24 +206,24 @@ export const MainContainer = () => {
     else if (num === 1) {
       if (w) {
         console.log("forward()");
-        forward();
+        (async function() { setCommand(await forward()); }());
       }
       else if (a) {
         console.log("rotateLeft()");
-        rotateLeft();
+        (async function() { setCommand(await rotateLeft()); }());
       }
       else if (s) {
         console.log("reverse()");
-        reverse();
+        (async function() { setCommand(await reverse()); }());
       }
       else if (d) {
         console.log("rotateRight()");
-        rotateRight();
+        (async function() { setCommand(await rotateRight()); }());
       }
     }
     else if (num === 0) {
       console.log("end()");
-      end();
+      (async function() { setCommand(await end()); }());
     }
     else {
       console.log("Invalid Key Combination: " + keyPressedString(w, a, s, d));
@@ -269,7 +269,8 @@ export const MainContainer = () => {
           <RoverModule>
             <SensorDisplayWrapper><SensorDisplay name="OUTPUT VOL" value="10.09" max={12} unit="V" measure={true}/></SensorDisplayWrapper>
             {/* <SensorDisplayWrapper><SensorDisplay name="BATTERY" value="12.34" unit="%"/></SensorDisplayWrapper> */}
-            <SensorDisplayWrapper><SensorDisplay name="MODE" value={data.mode} unit={(data.mode ? data.mode[0] : "N")}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="DELAY" value={command.duration} unit="MS" max={20} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="MODE" value={command.mode} unit={command.abbrev}/></SensorDisplayWrapper>
             <Label>ROVER STATUS</Label>
           </RoverModule>
         </Right>
