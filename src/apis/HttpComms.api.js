@@ -34,13 +34,13 @@ const displayNumber = (dataAry, dataObj) => {
 
 const displayRock = (dataAry, dataObj) => {
     // Actual Parameters
-    let infrared353 = (Number(dataAry[3]) > 250) && (Number(dataAry[3]) < 500);
-    let infrared571 = (Number(dataAry[3]) > 420) && (Number(dataAry[3]) < 720);
-    let radio151 = true;
-    let radio239 = true;
-    let acoustic40 = (Number(dataAry[1]) > 8);
-    let magneticUp = true;
-    let magneticDown = true;
+    let infrared353 = (Number(dataAry[3]) > 300) && (Number(dataAry[3]) < 450);
+    let infrared571 = (Number(dataAry[3]) > 450) && (Number(dataAry[3]) < 650);
+    let radio151 = (Number(dataAry[2]) > 100) && (Number(dataAry[2]) < 200);
+    let radio239 = (Number(dataAry[2]) > 200) && (Number(dataAry[2]) < 300);
+    let acoustic40 = (Number(dataAry[1]) > 40);
+    let magneticUp = (Number(dataAry[4]) > 400);
+    let magneticDown = (Number(dataAry[4]) < 200);
 
     // Sample Parameters: Netherite
     // let infrared353 = false;
