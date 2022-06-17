@@ -89,58 +89,98 @@ export const MainContainer = () => {
   const [start, setStart] = useState(null);
   const [stable, setStable] = useState(undefined);
   const [data, setData] = useState({});
+  const [command, setCommand] = useState({});
   // function states
-  const [intervalId, setIntervalId] = useState(null);
+  // const [intervalId, setIntervalId] = useState(null);
   
   // util functions
-  const startSensing = () => {
+  // auto-sense
+  // const startSensing = () => {
+  //   let inProgressFlag = false;
+  //   var sensorIntervalId = setInterval(async () => {
+  //     if (inProgressFlag) {
+  //       return;
+  //     }
+  //     inProgressFlag = true;
+  //     try {
+  //       // try connecting
+  //       let parsed = await sensors();
+
+  //       // if connection successful and connection not set
+  //       if (connection === null) {
+  //         console.log(connection);
+  //         // set connection state
+  //         setConnection(true);
+  //         // set start time
+  //         let systemStart = new Date((new Date()).getTime() - parsed.time);
+  //         setStart(systemStart);
+  //         if (!InternetFlag) {
+  //           InternetFlag = true;
+  //           setStable(new Date());
+  //         }
+  //       }
+
+  //       setData(parsed);
+  //     }
+  //     catch (e) {
+  //       InternetFlag = false;
+  //       setConnection(false);
+  //       setIntervalId(null);
+  //       clearInterval(sensorIntervalId);
+  //     }
+  //     inProgressFlag = false;
+  //   }, 1000);
+
+  //   setIntervalId(sensorIntervalId);
+  // }
+  // stop auto-sense
+  // const stopSensing = () => {
+  //   clearInterval(intervalId);
+  //   setIntervalId(null);
+  // }
+  // sense once
+  const senseOnce = async () => {
     let inProgressFlag = false;
-    var sensorIntervalId = setInterval(async () => {
-      if (inProgressFlag) {
-        return;
-      }
-      inProgressFlag = true;
-      try {
-        // try connecting
-        let parsed = await sensors();
+    if (inProgressFlag) {
+      return;
+    }
+    inProgressFlag = true;
+    try {
+      // try connecting
+      let parsed = await sensors();
 
-        // if connection successful and connection not set
-        if (connection === null) {
-          console.log(connection);
-          // set connection state
-          setConnection(true);
-          // set start time
-          let systemStart = new Date((new Date()).getTime() - parsed.time);
-          setStart(systemStart);
-          if (!InternetFlag) {
-            InternetFlag = true;
-            setStable(new Date());
-          }
+      // if connection successful and connection not set
+      if (connection === null) {
+        // set connection state
+        setConnection(true);
+        // set start time
+        let systemStart = new Date((new Date()).getTime() - parsed.time);
+        setStart(systemStart);
+        if (!InternetFlag) {
+          InternetFlag = true;
+          setStable(new Date());
         }
-
-        setData(parsed);
       }
-      catch (e) {
-        InternetFlag = false;
-        setConnection(false);
-        setIntervalId(null);
-        clearInterval(sensorIntervalId);
-      }
-      inProgressFlag = false;
-    }, 1000);
-
-    setIntervalId(sensorIntervalId);
+      setData(parsed);
+    }
+    catch (e) {
+      InternetFlag = false;
+      setConnection(false);
+    }
   }
 
-  const stopSensing = () => {
-    clearInterval(intervalId);
-    setIntervalId(null);
-  }
+  // effect: auto get sensor
+  // // hook
+  // useEffect(() => { 
+  //   startSensing();
+  // }, 
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // [])
 
-  // effect: repeat get sensor
+  // effect: get sensor once
   // hook
   useEffect(() => { 
-    startSensing();
+    senseOnce();
   }, 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [])
@@ -231,19 +271,28 @@ export const MainContainer = () => {
   }, 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [w, a, s, d]);
-  // sensor hook
+  // auto sensor hook
+  // useEffect(() => {
+  //   if (j) {
+  //     if (intervalId) {
+  //       stopSensing();
+  //       console.log("stopSensing()");
+  //     }
+  //     else {
+  //       startSensing();
+  //       console.log("startSensing()");
+  //     }
+  //   }
+  // }, 
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // [i])
+  // manual sensor hook
   useEffect(() => {
     if (j) {
-      if (intervalId) {
-        stopSensing();
-        console.log("stopSensing()");
-      }
-      else {
-        startSensing();
-        console.log("startSensing()");
-      }
+      console.log("senseOnce()");
+      senseOnce();
     }
-  }, 
+  },
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [j])
 
@@ -256,10 +305,10 @@ export const MainContainer = () => {
         <Left>
           <MissionClockDisplay start={start}/>
           <SensorModule>
-            <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="DB" max={1} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="PA" max={1} measure={true}/></SensorDisplayWrapper>
             <SensorDisplayWrapper><SensorDisplay name="RADIO SIG" value={data.radio} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
             <SensorDisplayWrapper><SensorDisplay name="INFRARED SIG" value={data.infrared} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="G" max={1} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="MT" max={1} measure={true}/></SensorDisplayWrapper>
             <Label>ENVIRONMENT</Label>
           </SensorModule>
           <ConnectionDisplay connected={connection} device="EEEROVER" address="192.168.0.17" method="HTTP" time={stable}/>
@@ -267,8 +316,8 @@ export const MainContainer = () => {
         <Right>
           <ClockDisplay />
           <RoverModule>
-            <SensorDisplayWrapper><SensorDisplay name="OUTPUT VOL" value="10.09" max={12} unit="V" measure={true}/></SensorDisplayWrapper>
             {/* <SensorDisplayWrapper><SensorDisplay name="BATTERY" value="12.34" unit="%"/></SensorDisplayWrapper> */}
+            <SensorDisplayWrapper><SensorDisplay name="OUTPUT VOL" value={data.voltage} max={6} unit="V" measure={true}/></SensorDisplayWrapper>
             <SensorDisplayWrapper><SensorDisplay name="DELAY" value={command.duration} unit="MS" max={20} measure={true}/></SensorDisplayWrapper>
             <SensorDisplayWrapper><SensorDisplay name="MODE" value={command.mode} unit={command.abbrev}/></SensorDisplayWrapper>
             <Label>ROVER STATUS</Label>
@@ -280,7 +329,7 @@ export const MainContainer = () => {
         <CommandKeyDisplay letter="A" command="LEFT TURN"  />
         <CommandKeyDisplay letter="D" command="RIGHT TURN"  />
         <CommandKeyDisplay letter="S" command="REVERSE"  />
-        <CommandKeyDisplay letter="J" command="STOP/START SENSORS"  />
+        <CommandKeyDisplay letter="J" command="START SENSORS"  />
       </CommandContainer>
     </Container>
     </>

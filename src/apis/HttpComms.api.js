@@ -20,23 +20,12 @@ const prettyMode = {
     "PARK": ["PRK", "P"] 
 };
 const prettyNum = (numstr) => {
-    if (!numstr) return numstr;
-    if (numstr.length < 5) return numstr;
-    numstr = numstr.substr(0, 5);
-    return numstr;
+    return numstr.substr(0, 5);
 }
 
 // display functions
-const diplayMode = (dataAry, dataObj) => {
-    try {
-        dataObj["mode"] = MODE_MAP[dataAry[0]];
-    }
-    catch {
-        dataObj["mode"] = "ERR";
-    }
-}
-
 const displayNumber = (dataAry, dataObj) => {
+    dataObj["voltage"] = prettyNum(dataAry[0]);
     dataObj["acoustic"] = prettyNum(dataAry[1]);
     dataObj["radio"] = prettyNum(dataAry[2]);
     dataObj["infrared"] = prettyNum(dataAry[3]);
@@ -150,12 +139,7 @@ async function end() {
 async function sensors() {
     // actual response
     let response;
-    try {
-        response = await instance.get('/sensors');
-    }
-    catch (e) {
-        throw new Error("axios cannot connect to target address");
-    }
+    response = await instance.get('/sensors');
 
     // sample response
     // let response;
@@ -165,7 +149,6 @@ async function sensors() {
     let dataObj = {};
     // pre-process
     displayTime(dataAry, dataObj);
-    diplayMode(dataAry, dataObj);
     displayNumber(dataAry, dataObj);
     // rock detection
     displayRock(dataAry, dataObj);
