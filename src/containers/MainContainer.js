@@ -305,10 +305,10 @@ export const MainContainer = () => {
         <Left>
           <MissionClockDisplay start={start}/>
           <SensorModule>
-            <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="PA" max={1} measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="RADIO SIG" value={data.radio} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="INFRARED SIG" value={data.infrared} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="UT" max={1} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="PA" max={1000} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="RADIO SIG" value={data.radio} unit="HZ" max={1000} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="INFRARED SIG" value={data.infrared} unit="HZ" max={1000} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="UT" max={1000} measure={true}/></SensorDisplayWrapper>
             <Label>ENVIRONMENT</Label>
           </SensorModule>
           <ConnectionDisplay connected={connection} device="EEEROVER" address="192.168.0.17" method="HTTP" time={stable}/>
@@ -318,7 +318,7 @@ export const MainContainer = () => {
           <RoverModule>
             {/* <SensorDisplayWrapper><SensorDisplay name="BATTERY" value="12.34" unit="%"/></SensorDisplayWrapper> */}
             <SensorDisplayWrapper><SensorDisplay name="OUTPUT VOL" value={data.voltage} max={6} unit="V" measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="DELAY" value={command.duration} unit="MS" max={20} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="DELAY" value={command.duration} unit="MS" max={100} measure={true}/></SensorDisplayWrapper>
             <SensorDisplayWrapper><SensorDisplay name="MODE" value={command.mode} unit={command.abbrev}/></SensorDisplayWrapper>
             <Label>ROVER STATUS</Label>
           </RoverModule>
