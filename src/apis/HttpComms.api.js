@@ -20,7 +20,11 @@ const prettyMode = {
     "END": ["PRK", "P"] 
 };
 const prettyNum = (numstr) => {
-    return numstr.substr(0, 5);
+    let proposed = numstr.substring(0, 5);
+    if (proposed[4] === ".") {
+      proposed = numstr.substring(0, 6);
+    }
+    return proposed;
 }
 
 // display functions
