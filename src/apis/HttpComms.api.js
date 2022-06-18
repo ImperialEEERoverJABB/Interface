@@ -1,31 +1,35 @@
 // connection
 var axios = require('axios');
+var demo = false;
 var instance = axios.create({
-    baseURL: 'http://localhost:80/',
+    baseURL: (demo ? 'http://localhost:80/' : 'http://192.168.0.17:80/'),
     timeout: 10000
 });
 
 
 // util functions
-const MODE_MAP = { "000": "DRV", "001": "REV", "010": "LFT", "011": "RGT", "100": "PRK" };
+const prettyMode = { 
+    "FORWARD": ["DRV", "D"], 
+    "REVERSE": ["REV", "R"], 
+    "ROTATE LEFT": ["LFT", "L"], 
+    "ROTATE RIGHT": ["RGT", "R"], 
+    "FORWARD LEFT": ["DWL", "DL"],
+    "FORWARD RIGHT": ["DWR", "DR"],
+    "REVERSE LEFT": ["RVL", "RL"],
+    "REVERSE RIGHT": ["RVR", "RR"],
+    "END": ["PRK", "P"] 
+};
 const prettyNum = (numstr) => {
-    if (!numstr) return numstr;
-    if (numstr.length < 5) return numstr;
-    numstr = numstr.substr(0, 5);
-    return numstr;
+    let proposed = numstr.substring(0, 5);
+    if (proposed[4] === ".") {
+      proposed = numstr.substring(0, 6);
+    }
+    return proposed;
 }
 
 // display functions
-const diplayMode = (dataAry, dataObj) => {
-    try {
-        dataObj["mode"] = MODE_MAP[dataAry[0]];
-    }
-    catch {
-        dataObj["mode"] = "ERR";
-    }
-}
-
 const displayNumber = (dataAry, dataObj) => {
+    dataObj["voltage"] = prettyNum(dataAry[0]);
     dataObj["acoustic"] = prettyNum(dataAry[1]);
     dataObj["radio"] = prettyNum(dataAry[2]);
     dataObj["infrared"] = prettyNum(dataAry[3]);
@@ -34,13 +38,13 @@ const displayNumber = (dataAry, dataObj) => {
 
 const displayRock = (dataAry, dataObj) => {
     // Actual Parameters
-    let infrared353 = (Number(dataAry[3]) > 250) && (Number(dataAry[3]) < 500);
-    let infrared571 = (Number(dataAry[3]) > 420) && (Number(dataAry[3]) < 720);
-    let radio151 = true;
-    let radio239 = true;
-    let acoustic40 = (Number(dataAry[1]) > 8);
-    let magneticUp = true;
-    let magneticDown = true;
+    let infrared353 = (Number(dataAry[3]) > 300) && (Number(dataAry[3]) < 450);
+    let infrared571 = (Number(dataAry[3]) > 450) && (Number(dataAry[3]) < 650);
+    let radio151 = (Number(dataAry[2]) > 100) && (Number(dataAry[2]) < 200);
+    let radio239 = (Number(dataAry[2]) > 200) && (Number(dataAry[2]) < 300);
+    let acoustic40 = (Number(dataAry[1]) > 40);
+    let magneticUp = (Number(dataAry[4]) > 400);
+    let magneticDown = (Number(dataAry[4]) < 200);
 
     // Sample Parameters: Netherite
     // let infrared353 = false;
@@ -72,41 +76,74 @@ const displayTime = (dataAry, dataObj) => {
 }
 
 // return state
-function drive() {
-    try { instance.get('/forward'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function forward() {
+    let start = performance.now();
+    let response = await instance.get('/forward');
+    let finish = performance.now();
+    return { duration: String(((finish-start).toFixed(5))).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] };
 }
 
-function reverse() {
-    try { instance.get('/reverse'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function reverse() {
+    let start = performance.now();
+    let response = await instance.get('/reverse');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] };    
 }
 
-function left() {
-    try { instance.get('/left-turn'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function rotateLeft() {
+    let start = performance.now();
+    let response = await instance.get('/rotate-left');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
-function right() {
-    try { instance.get('/right-turn'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function rotateRight() {
+    let start = performance.now();
+    let response = await instance.get('/rotate-right');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
-function end() {
-    try { instance.get('/end'); }
-    catch (e) { throw new Error("axios cannot connect to target address"); }
+async function forwardLeft() {
+    let start = performance.now();
+    let response = await instance.get('/forward-left');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
+}
+
+async function forwardRight() {
+    let start = performance.now();
+    let response = await instance.get('/forward-right');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
+}
+
+async function reverseLeft() {
+    let start = performance.now();
+    let response = await instance.get('/reverse-left');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
+}
+
+async function reverseRight() {
+    let start = performance.now();
+    let response = await instance.get('/reverse-right');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
+}
+
+async function end() {
+    let start = performance.now();
+    let response = await instance.get('/end');
+    let finish = performance.now();
+    return { duration: String((finish-start).toFixed(5)).substr(0, 5), mode: prettyMode[response.data][0], abbrev: prettyMode[response.data][1] }; 
 }
 
 // return data dump
 async function sensors() {
     // actual response
     let response;
-    try {
-        response = await instance.get('/sensors');
-    }
-    catch (e) {
-        throw new Error("axios cannot connect to target address");
-    }
+    response = await instance.get('/sensors');
 
     // sample response
     // let response;
@@ -116,7 +153,6 @@ async function sensors() {
     let dataObj = {};
     // pre-process
     displayTime(dataAry, dataObj);
-    diplayMode(dataAry, dataObj);
     displayNumber(dataAry, dataObj);
     // rock detection
     displayRock(dataAry, dataObj);
@@ -128,10 +164,14 @@ async function sensors() {
 
 // exports
 module.exports = {
-    drive,
+    forward,
     reverse,
-    left,
-    right,
-    end,
-    sensors
+    sensors,
+    rotateLeft,
+    rotateRight,
+    forwardLeft,
+    forwardRight,
+    reverseLeft,
+    reverseRight,
+    end
 }

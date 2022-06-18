@@ -12,7 +12,7 @@ import { RockModal } from "../components/RockModal";
 
 import DummyImage from "../img/dummy-img-mars.png";
 
-import { drive, reverse, left, right, end, sensors } from "../apis/HttpComms.api";
+import { forward, reverse, end, sensors, forwardLeft, forwardRight, reverseLeft, reverseRight, rotateLeft, rotateRight } from "../apis/HttpComms.api";
 
 var InternetFlag = false;
 
@@ -89,58 +89,98 @@ export const MainContainer = () => {
   const [start, setStart] = useState(null);
   const [stable, setStable] = useState(undefined);
   const [data, setData] = useState({});
+  const [command, setCommand] = useState({});
   // function states
-  const [intervalId, setIntervalId] = useState(null);
+  // const [intervalId, setIntervalId] = useState(null);
   
   // util functions
-  const startSensing = () => {
+  // auto-sense
+  // const startSensing = () => {
+  //   let inProgressFlag = false;
+  //   var sensorIntervalId = setInterval(async () => {
+  //     if (inProgressFlag) {
+  //       return;
+  //     }
+  //     inProgressFlag = true;
+  //     try {
+  //       // try connecting
+  //       let parsed = await sensors();
+
+  //       // if connection successful and connection not set
+  //       if (connection === null) {
+  //         console.log(connection);
+  //         // set connection state
+  //         setConnection(true);
+  //         // set start time
+  //         let systemStart = new Date((new Date()).getTime() - parsed.time);
+  //         setStart(systemStart);
+  //         if (!InternetFlag) {
+  //           InternetFlag = true;
+  //           setStable(new Date());
+  //         }
+  //       }
+
+  //       setData(parsed);
+  //     }
+  //     catch (e) {
+  //       InternetFlag = false;
+  //       setConnection(false);
+  //       setIntervalId(null);
+  //       clearInterval(sensorIntervalId);
+  //     }
+  //     inProgressFlag = false;
+  //   }, 1000);
+
+  //   setIntervalId(sensorIntervalId);
+  // }
+  // stop auto-sense
+  // const stopSensing = () => {
+  //   clearInterval(intervalId);
+  //   setIntervalId(null);
+  // }
+  // sense once
+  const senseOnce = async () => {
     let inProgressFlag = false;
-    var sensorIntervalId = setInterval(async () => {
-      if (inProgressFlag) {
-        return;
-      }
-      inProgressFlag = true;
-      try {
-        // try connecting
-        let parsed = await sensors();
+    if (inProgressFlag) {
+      return;
+    }
+    inProgressFlag = true;
+    try {
+      // try connecting
+      let parsed = await sensors();
 
-        // if connection successful and connection not set
-        if (connection === null) {
-          console.log(connection);
-          // set connection state
-          setConnection(true);
-          // set start time
-          let systemStart = new Date((new Date()).getTime() - parsed.time);
-          setStart(systemStart);
-          if (!InternetFlag) {
-            InternetFlag = true;
-            setStable(new Date());
-          }
+      // if connection successful and connection not set
+      if (connection === null) {
+        // set connection state
+        setConnection(true);
+        // set start time
+        let systemStart = new Date((new Date()).getTime() - parsed.time);
+        setStart(systemStart);
+        if (!InternetFlag) {
+          InternetFlag = true;
+          setStable(new Date());
         }
-
-        setData(parsed);
       }
-      catch (e) {
-        InternetFlag = false;
-        setConnection(false);
-        setIntervalId(null);
-        clearInterval(sensorIntervalId);
-      }
-      inProgressFlag = false;
-    }, 1000);
-
-    setIntervalId(sensorIntervalId);
+      setData(parsed);
+    }
+    catch (e) {
+      InternetFlag = false;
+      setConnection(false);
+    }
   }
 
-  const stopSensing = () => {
-    clearInterval(intervalId);
-    setIntervalId(null);
-  }
+  // effect: auto get sensor
+  // // hook
+  // useEffect(() => { 
+  //   startSensing();
+  // }, 
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // [])
 
-  // effect: repeat get sensor
+  // effect: get sensor once
   // hook
   useEffect(() => { 
-    startSensing();
+    senseOnce();
   }, 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [])
@@ -152,47 +192,107 @@ export const MainContainer = () => {
   let s = useKeyPress("s");
   let d = useKeyPress("d");
   let j = useKeyPress("j");
+  // util function
+  const keyPressedString = (w, a, s, d, j=false) => {
+    let array = [];
+    if (w) array.push("W");
+    if (a) array.push("A");
+    if (s) array.push("S");
+    if (d) array.push("D");
+    if (j) array.push("J");
+    if (array.length === 0) return "";
+    else if (array.length === 1) return array[0];
+    else if (array.length === 2) return array[0] + " and " + array[1];
+    else {
+      let ans = "";
+      for (let item of array) {
+        if (item === array[array.length-1]) {
+          ans += item;
+        }
+        else if (item === array[array.length-2]) {
+          ans += (item + ", and ");
+        }
+        else {
+          ans += (item + ", ")
+        }
+      }
+      return ans;
+    }
+  }
   // command hook
   useEffect(() => {
-    if ((w + a + s + d) > 1) {
-      console.log("nothing");
+    let num = w + a + s +d;
+    if (num === 2) {
+      if (w && a) {
+        console.log("forwardLeft()");
+        (async function() { setCommand(await forwardLeft()); }());
+      }
+      else if (w && d) {
+        console.log("forwardRight()");
+        (async function() { setCommand(await forwardRight()); }());
+      }
+      else if (s && a) {
+        console.log("reverseLeft()");
+        (async function() { setCommand(await reverseLeft()); }());
+      }
+      else if (s && d) {
+        console.log("reverseRight()");
+        (async function() { setCommand(await reverseRight()); }());
+      }
+      else {
+        console.log("Invalid Key Combination: " + keyPressedString(w, a, s, d));
+      }
     }
-    else if (w) {
-      drive();
-      console.log("drive()");
+    else if (num === 1) {
+      if (w) {
+        console.log("forward()");
+        (async function() { setCommand(await forward()); }());
+      }
+      else if (a) {
+        console.log("rotateLeft()");
+        (async function() { setCommand(await rotateLeft()); }());
+      }
+      else if (s) {
+        console.log("reverse()");
+        (async function() { setCommand(await reverse()); }());
+      }
+      else if (d) {
+        console.log("rotateRight()");
+        (async function() { setCommand(await rotateRight()); }());
+      }
     }
-    else if (a) {
-      left();
-      console.log("left()");
-    }
-    else if (s) {
-      reverse();
-      console.log("reverse()");
-    }
-    else if (d) {
-      right();
-      console.log("right()");
+    else if (num === 0) {
+      console.log("end()");
+      (async function() { setCommand(await end()); }());
     }
     else {
-      end();
-      console.log("end()");
+      console.log("Invalid Key Combination: " + keyPressedString(w, a, s, d));
     }
   }, 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [w, a, s, d]);
-  // sensor hook
+  // auto sensor hook
+  // useEffect(() => {
+  //   if (j) {
+  //     if (intervalId) {
+  //       stopSensing();
+  //       console.log("stopSensing()");
+  //     }
+  //     else {
+  //       startSensing();
+  //       console.log("startSensing()");
+  //     }
+  //   }
+  // }, 
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // [i])
+  // manual sensor hook
   useEffect(() => {
     if (j) {
-      if (intervalId) {
-        stopSensing();
-        console.log("stopSensing()");
-      }
-      else {
-        startSensing();
-        console.log("startSensing()");
-      }
+      console.log("senseOnce()");
+      senseOnce();
     }
-  }, 
+  },
   // eslint-disable-next-line react-hooks/exhaustive-deps
   [j])
 
@@ -205,10 +305,10 @@ export const MainContainer = () => {
         <Left>
           <MissionClockDisplay start={start}/>
           <SensorModule>
-            <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="DB" max={1} measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="RADIO SIG" value={data.radio} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="INFRARED SIG" value={data.infrared} unit="HZ" max={1} measure={true}/></SensorDisplayWrapper>
-            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="G" max={1} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="ACOUSTIC SIG" value={data.acoustic} unit="PA" max={1000} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="RADIO SIG" value={data.radio} unit="HZ" max={1000} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="INFRARED SIG" value={data.infrared} unit="HZ" max={1000} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="MAGNETIC FLD" value={data.magnetic} unit="UT" max={1000} measure={true}/></SensorDisplayWrapper>
             <Label>ENVIRONMENT</Label>
           </SensorModule>
           <ConnectionDisplay connected={connection} device="EEEROVER" address="192.168.0.17" method="HTTP" time={stable}/>
@@ -216,9 +316,10 @@ export const MainContainer = () => {
         <Right>
           <ClockDisplay />
           <RoverModule>
-            <SensorDisplayWrapper><SensorDisplay name="OUTPUT VOL" value="10.09" max={12} unit="V" measure={true}/></SensorDisplayWrapper>
             {/* <SensorDisplayWrapper><SensorDisplay name="BATTERY" value="12.34" unit="%"/></SensorDisplayWrapper> */}
-            <SensorDisplayWrapper><SensorDisplay name="MODE" value={data.mode} unit={(data.mode ? data.mode[0] : "N")}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="OUTPUT VOL" value={data.voltage} max={6} unit="V" measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="DELAY" value={command.duration} unit="MS" max={100} measure={true}/></SensorDisplayWrapper>
+            <SensorDisplayWrapper><SensorDisplay name="MODE" value={command.mode} unit={command.abbrev}/></SensorDisplayWrapper>
             <Label>ROVER STATUS</Label>
           </RoverModule>
         </Right>
@@ -228,7 +329,7 @@ export const MainContainer = () => {
         <CommandKeyDisplay letter="A" command="LEFT TURN"  />
         <CommandKeyDisplay letter="D" command="RIGHT TURN"  />
         <CommandKeyDisplay letter="S" command="REVERSE"  />
-        <CommandKeyDisplay letter="J" command="STOP/START SENSORS"  />
+        <CommandKeyDisplay letter="J" command="START SENSORS"  />
       </CommandContainer>
     </Container>
     </>
