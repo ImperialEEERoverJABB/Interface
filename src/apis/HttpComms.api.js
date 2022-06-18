@@ -17,7 +17,7 @@ const prettyMode = {
     "FORWARD RIGHT": ["DWR", "DR"],
     "REVERSE LEFT": ["RVL", "RL"],
     "REVERSE RIGHT": ["RVR", "RR"],
-    "PARK": ["PRK", "P"] 
+    "END": ["PRK", "P"] 
 };
 const prettyNum = (numstr) => {
     return numstr.substr(0, 5);
