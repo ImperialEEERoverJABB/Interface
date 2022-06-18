@@ -24,10 +24,10 @@ const MissionTimeWrapper = styled.div`
 `;
 
 const MissionTimeDisplay = styled.span`
-  font-family: 'Roboto Mono';
+  font-family: monospace;
   color: black;
-  font-weight: bold;
-  font-size: 2.25em;
+  font-weight: 900;
+  font-size: 2.75em;
 `;
 
 
