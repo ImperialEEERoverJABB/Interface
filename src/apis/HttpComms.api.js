@@ -3,7 +3,7 @@ var axios = require('axios');
 var demo = false;
 var instance = axios.create({
     baseURL: (demo ? 'http://localhost:80/' : 'http://192.168.0.17:80/'),
-    timeout: 10000
+    timeout: 5000
 });
 
 
