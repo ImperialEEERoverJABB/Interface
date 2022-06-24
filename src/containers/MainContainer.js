@@ -12,7 +12,7 @@ import { RockModal } from "../components/RockModal";
 
 import DummyImage from "../img/dummy-img-mars.png";
 
-import { forward, reverse, end, sensors, forwardLeft, forwardRight, reverseLeft, reverseRight, rotateLeft, rotateRight } from "../apis/HttpComms.api";
+var { forward, reverse, end, sense, forwardLeft, forwardRight, reverseLeft, reverseRight, rotateLeft, rotateRight } = require("../apis/HttpComms.api");
 
 var InternetFlag = false;
 
@@ -104,7 +104,7 @@ export const MainContainer = () => {
   //     inProgressFlag = true;
   //     try {
   //       // try connecting
-  //       let parsed = await sensors();
+  //       let parsed = await sense();
 
   //       // if connection successful and connection not set
   //       if (connection === null) {
@@ -147,7 +147,8 @@ export const MainContainer = () => {
     inProgressFlag = true;
     try {
       // try connecting
-      let parsed = await sensors();
+      let parsed = await sense();
+      console.log("parsed", parsed);
 
       // if connection successful and connection not set
       if (connection === null) {
