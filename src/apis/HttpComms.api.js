@@ -38,8 +38,8 @@ const displayNumber = (dataAry, dataObj) => {
 
 const displayRock = (dataAry, dataObj) => {
     // Actual Parameters
-    let infrared353 = (Number(dataAry[3]) > 330) && (Number(dataAry[3]) < 370);
-    let infrared571 = (Number(dataAry[3]) > 550) && (Number(dataAry[3]) < 590);
+    let infrared353 = (Number(dataAry[3]) <= 400);
+    let infrared571 = (Number(dataAry[3]) > 400);
     let radio151 = (Number(dataAry[2]) > 130) && (Number(dataAry[2]) < 160);
     let radio239 = (Number(dataAry[2]) > 200);
     let acoustic40 = (Number(dataAry[1]) > 1000);
