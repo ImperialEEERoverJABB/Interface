@@ -42,12 +42,12 @@ const displayRock = (dataAry, dataObj) => {
     // Actual Parameters
     let infrared353 = (Number(dataAry[3]) <= 400);
     let infrared571 = (Number(dataAry[3]) > 400);
-    let radio151 = (Number(dataAry[2]) > 130) && (Number(dataAry[2]) < 160);
-    let radio239 = (Number(dataAry[2]) > 200);
-    let radio = (radio151 || radio239);
-    let acoustic40 = (Number(dataAry[1]) > 1000);
-    let magneticUp = (radio ? Number(dataAry[4]) < 770 : Number(dataAry[4]) < 500);
-    let magneticDown = (radio ? Number(dataAry[4]) > 850 : Number(dataAry[4]) > 560);
+    let radio151 = (Number(dataAry[2]) < 185) && (Number(dataAry[2]) > 10);
+    let radio239 = (Number(dataAry[2]) > 185);
+    // let radio = (radio151 || radio239);
+    let acoustic40 = (Number(dataAry[1]) > 0.8);
+    let magneticUp = (Number(dataAry[2]) !== 0 ? Number(dataAry[4]) < 750 : Number(dataAry[4]) < 500);
+    let magneticDown = (Number(dataAry[2]) !== 0 ? Number(dataAry[4]) > 850 : Number(dataAry[4]) > 560);
 
     // Sample Parameters: Netherite
     // let infrared353 = false;
@@ -70,7 +70,7 @@ const displayRock = (dataAry, dataObj) => {
     let noMagnetic = (!magneticUp && !magneticDown);
 
     // Decision Tree (No Inference)
-    if (radio151 && acoustic40 ) dataObj["rock"] = "GABORIUM";
+    if (radio151 && acoustic40) dataObj["rock"] = "GABORIUM";
     else if (radio151 && magneticUp) dataObj["rock"] = "ADAMANTINE";
     else if (radio239 && magneticDown) dataObj["rock"] = "XIRANG";
     else if (radio239) dataObj["rock"] = "LATHWAITE";
@@ -177,6 +177,7 @@ export async function sense() {
     // response = { data: "100,0.9876153528043081,0.3555515390782771,0.30116497482281646,0.8490366708833055,0" };
 
     let dataAry = (response.data).split(',');
+    console.log(dataAry);
     let dataObj = {};
 
     try {
