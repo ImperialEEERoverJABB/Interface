@@ -22,7 +22,7 @@ const prettyMode = {
 const prettyNum = (numstr) => {
     let proposed = numstr.substring(0, 5);
     if (proposed[4] === ".") {
-      proposed = numstr.substring(0, 6);
+      proposed = numstr.substring(0, 4);
     }
     return proposed;
 }
