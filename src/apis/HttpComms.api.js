@@ -38,13 +38,13 @@ const displayNumber = (dataAry, dataObj) => {
 
 const displayRock = (dataAry, dataObj) => {
     // Actual Parameters
-    let infrared353 = (Number(dataAry[3]) > 300) && (Number(dataAry[3]) < 450);
-    let infrared571 = (Number(dataAry[3]) > 450) && (Number(dataAry[3]) < 650);
-    let radio151 = (Number(dataAry[2]) > 100) && (Number(dataAry[2]) < 200);
-    let radio239 = (Number(dataAry[2]) > 200) && (Number(dataAry[2]) < 300);
-    let acoustic40 = (Number(dataAry[1]) > 40);
-    let magneticUp = (Number(dataAry[4]) > 400);
-    let magneticDown = (Number(dataAry[4]) < 200);
+    let infrared353 = (Number(dataAry[3]) > 330) && (Number(dataAry[3]) < 370);
+    let infrared571 = (Number(dataAry[3]) > 550) && (Number(dataAry[3]) < 590);
+    let radio151 = (Number(dataAry[2]) > 130) && (Number(dataAry[2]) < 160);
+    let radio239 = (Number(dataAry[2]) > 200);
+    let acoustic40 = (Number(dataAry[1]) > 1000);
+    let magneticDown = (Number(dataAry[4]) > 1);
+    let magneticUp = (Number(dataAry[4]) < -1);
 
     // Sample Parameters: Netherite
     // let infrared353 = false;
@@ -56,7 +56,7 @@ const displayRock = (dataAry, dataObj) => {
     // let magneticDown = false;
 
     // Inferred Parameters
-    let noRadio = (!radio151 && !radio239);
+    let noRadio = (infrared353 || infrared571);
     let noInfrared = (!infrared353 && !infrared571);
     let noAcoustic = (!acoustic40);
     let noMagnetic = (!magneticUp && !magneticDown);
